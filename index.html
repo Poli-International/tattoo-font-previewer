@@ -1,56 +1,54 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    
-    <!-- Primary Meta Tags -->
-    <title>Tattoo Font Previewer | 50+ Free Fonts | Poli International</title>
-    <meta name="title" content="Tattoo Font Previewer | 50+ Free Fonts | Poli International">
-    <meta name="description" content="Preview your text in 50+ professional tattoo fonts instantly. Free tattoo font previewer with blackletter, script, gothic styles. Download as PNG!">
-    <meta name="keywords" content="tattoo fonts, tattoo lettering, tattoo script fonts, blackletter tattoo fonts, old english tattoo fonts, tattoo font generator, tattoo typography, custom tattoo fonts, tattoo text preview, gothic tattoo fonts, cursive tattoo fonts">
-    <meta name="author" content="Poli International Co., Ltd.">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+    <script>
+if (window.self !== window.top) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.add('dark');
+    document.addEventListener('DOMContentLoaded', function () { document.body.classList.add('dark-mode'); });
+    window.addEventListener('message', function(e) {
+        if (e.data && e.data.type === 'poli-theme') {
+            if (e.data.light) {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                document.documentElement.classList.remove('dark');
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('poli-dark-mode', 'light');
+                window.dispatchEvent(new StorageEvent('storage', { key: 'poli-dark-mode', newValue: 'light' }));
+            } else {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('poli-dark-mode', 'dark');
+                window.dispatchEvent(new StorageEvent('storage', { key: 'poli-dark-mode', newValue: 'dark' }));
+            }
+        }
+    });
+}
+</script>
+    <style>
+    /* Override React inline styles when parent controls theme */
+    body.dark-mode { background-color: #0D0D0D !important; }
+    body.light-mode { background-color: #FFFFFF !important; }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tattoo Font Previewer | Poli International</title>
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://poliinternational.com/tattoo-font-previewer/">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://poliinternational.com/tattoo-font-previewer/">
-    <meta property="og:title" content="Tattoo Font Previewer | 50+ Free Fonts">
-    <meta property="og:description" content="Preview your text in 50+ professional tattoo fonts. Blackletter, script, gothic styles. Free download!">
-    <meta property="og:image" content="https://poliinternational.com/wp-content/uploads/tools/tattoo-font-previewer-og.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Poli International">
-    <meta property="og:locale" content="en_US">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://poliinternational.com/tattoo-font-previewer/">
-    <meta name="twitter:title" content="Tattoo Font Previewer | 50+ Free Fonts">
-    <meta name="twitter:description" content="Preview your text in 50+ professional tattoo fonts. Blackletter, script, gothic styles. Free!">
-    <meta name="twitter:image" content="https://poliinternational.com/wp-content/uploads/tools/tattoo-font-previewer-twitter.jpg">
-
-    <!-- Mobile & Performance -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="theme-color" content="#7C3AED" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
-
-    <!-- Performance Hints -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-
-    <!-- Schema.org JSON-LD -->
-    <script type='application/ld+json'>
+    <script type="module" crossorigin src="/tools/tattoo-font-previewer/assets/main-BgHeG9R-.js"></script>
+    <link rel="modulepreload" crossorigin href="/tools/tattoo-font-previewer/assets/vendor-DF3nNwgj.js">
+    <link rel="modulepreload" crossorigin href="/tools/tattoo-font-previewer/assets/index-BFb-GsAn.js">
+    <link rel="stylesheet" crossorigin href="/tools/tattoo-font-previewer/assets/index-CKwCImN9.css">
+    <link rel="stylesheet" href="/tools/tattoo-font-previewer/css/poli-standard.css">
+<script type='application/ld+json'>
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Tattoo Font Previewer",
   "url": "https://poliinternational.com/tools/tattoo-font-previewer/",
-  "description": "Preview custom text in 100+ professional tattoo fonts",
+  "description": "Preview tattoo lettering and fonts before committing to ink. Test typography styles, sizes, and spacing on a simulated skin surface.",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Any",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -59,14 +57,10 @@
     "price": "0",
     "priceCurrency": "USD"
   },
-  "codeRepository": "https://github.com/poli-international/tattoo-font-previewer",
   "author": {
     "@type": "Organization",
     "name": "Poli International",
-    "url": "https://poliinternational.com",
-    "sameAs": [
-      "https://github.com/poli-international"
-    ]
+    "url": "https://poliinternational.com"
   },
   "creator": {
     "@type": "Organization",
@@ -78,66 +72,96 @@
     "name": "Poli International",
     "url": "https://poliinternational.com"
   },
-  "dateModified": "2026-02-07",
+  "dateModified": "2026-07-01",
   "license": "https://opensource.org/licenses/MIT",
   "isAccessibleForFree": true
 }
 </script>
 
-</head>
-<body>
-<!-- GitHub CTA -->
-<div class='github-cta' style='margin: 1.5rem 0;'>
-  <a href='https://github.com/poli-international/tattoo-font-previewer' 
-     target='_blank' rel='noopener noreferrer' class='btn-github' 
-     style='display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: #24292e; color: #ffffff; border-radius: 6px; text-decoration: none; font-weight: 500;'>
-    <svg width='20' height='20' viewBox='0 0 16 16' fill='currentColor'>
-      <path d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z'/>
-    </svg>
-    <span>View on GitHub</span>
-  </a>
-</div>
-<!-- GitHub Stats -->
-<div class='github-stats' style='display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0;'>
-  <img src='https://img.shields.io/github/stars/poli-international/tattoo-font-previewer?style=social' alt='Stars' loading='lazy'>
-  <img src='https://img.shields.io/github/last-commit/poli-international/tattoo-font-previewer' alt='Last commit' loading='lazy'>
-</div>
+  <script src="/js/input-guards.js"></script>
+<link rel="stylesheet" href="/tools/shared/print.css" media="print">
+  <link rel="stylesheet" href="/tools/shared/a11y.css">
+  </head>
+<body class="dark-mode">
+    <!-- Tool Tabs -->
+    <div class="tool-tabs" style="display:flex !important;background:#1a1a1a;border-bottom:2px solid #333;position:relative;z-index:999999;">
+        <button class="tool-tab active" data-tab="tool" style="flex:1;padding:1rem;background:#3B82F6;color:#fff;border:none;cursor:pointer;font-size:1rem;font-weight:600;">Ã°Å¸Â§Â® Tool</button>
+        <button class="tool-tab" data-tab="docs" style="flex:1;padding:1rem;background:#222;color:#ccc;border:none;cursor:pointer;font-size:1rem;font-weight:600;">Ã°Å¸â€œâ€“ Documentation</button>
+        <button class="tool-tab" data-tab="embed" style="flex:1;padding:1rem;background:#222;color:#ccc;border:none;cursor:pointer;font-size:1rem;font-weight:600;">Ã¢Å¡Â¡ Embed Code</button>
+    </div>
 
+    <!-- Tab Content: Tool -->
+    <div id="tab-tool" class="wrapper-tab-content">
+        <main class="tool-main-content">
+            <div id="root"></div>
+        </main>
+    </div>
 
-<nav class="breadcrumb-nav" aria-label="Breadcrumb">
-    <a href="https://poliinternational.com/">Home</a>
-    <span>›</span>
-    <a href="https://poliinternational.com/tools/">Tools</a>
-    <span>›</span>
-    <a href="https://poliinternational.com/tools/#tattoo-tools">Tattoo Tools</a>
-    <span>›</span>
-    <strong>Tattoo Font Previewer</strong>
-</nav>
+    <!-- Tab Content: Documentation -->
+    <div id="tab-docs" class="wrapper-tab-content" style="display:none;padding:2rem 1rem;">
+        <iframe src="./documentation.html" style="width:100%;min-height:800px;border:none;background:#0f0f0f;"></iframe>
+    </div>
 
-    <div id="root"></div>
-
-  
-
-<!-- Related Tools Section -->
-<section class="related-tools-section" style="padding: 2rem 1rem; background: #fff; border-top: 1px solid #eee;">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: #1e293b;">Recommended for You</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-            <a href="https://poliinternational.com/coverage-calculator/" style="display: block; padding: 1rem; background: #f1f5f9; border-radius: 8px; text-decoration: none; color: #0693e3; font-weight: 500; text-align: center; transition: background 0.2s;">Coverage Calculator</a>
-            <a href="https://poliinternational.com/ink-mixer/" style="display: block; padding: 1rem; background: #f1f5f9; border-radius: 8px; text-decoration: none; color: #0693e3; font-weight: 500; text-align: center; transition: background 0.2s;">Ink Mixer</a>
-            <a href="https://poliinternational.com/needle-selector/" style="display: block; padding: 1rem; background: #f1f5f9; border-radius: 8px; text-decoration: none; color: #0693e3; font-weight: 500; text-align: center; transition: background 0.2s;">Needle Selector</a>
-        </div>
-        <div style="text-align: center; margin-top: 1.5rem;">
-            <a href="https://poliinternational.com/tools/" style="color: #64748b; text-decoration: underline; font-size: 0.9rem;">View All 17 Free Tools</a>
+    <!-- Tab Content: Embed -->
+    <div id="tab-embed" class="wrapper-tab-content" style="display:none;padding:2rem;text-align:center;">
+        <div style="background:#1a1a1a;padding:2rem;border-radius:8px;max-width:600px;margin:0 auto;">
+            <h2 style="color:#3B82F6;margin-bottom:1rem;">Embed This Tool</h2>
+            <p style="color:#ccc;margin-bottom:1rem;">Copy the code below to embed this tool on your website:</p>
+            <textarea id="embedCodeTab" style="width:100%;height:120px;background:#0f0f0f;color:#10B981;border:1px solid #333;border-radius:4px;padding:1rem;font-family:monospace;font-size:0.9rem;" readonly>&lt;iframe src="https://poliinternational.com/tools/tattoo-font-previewer/index.html" width="100%" height="1000" frameborder="0" style="border-radius:12px;"&gt;&lt;/iframe&gt;</textarea>
+            <button onclick="copyEmbedCode()" style="margin-top:1rem;padding:0.75rem 1.5rem;background:#3B82F6;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Ã°Å¸â€œâ€¹ Copy Code</button>
         </div>
     </div>
-</section>
 
-<!-- GEO Semantic Block -->
-<aside class="geo-summary-block" style="background: #f8fafc; border-left: 4px solid #0693e3; padding: 1.5rem; margin: 2rem 0; font-style: italic; color: #334155; border-radius: 0 8px 8px 0;">
-    <p style="margin: 0; line-height: 1.6;">Pro Artist Insight: Proper planning is the mark of a master. Integrating precision calculations into your workflow ensures consistent results and high-quality healing for every client. Use this tool to bridge the gap between artistic vision and technical execution.</p>
-</aside>
+    <div id="embedModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" style="text-align: center;">Ã°Å¸Å½Â Use This Tool FREE</h2>
+                <span class="modal-close" id="modalClose">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>Ã°Å¸â€œâ€¹ Copy Embed Code</h3>
+                    <div class="code-container">
+                        <textarea id="embedCode" class="embed-code-textarea" readonly></textarea>
+                        <button id="copyEmbedCode" class="btn btn--primary btn--small">Ã°Å¸â€œâ€¹ Copy Code</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<script type="module" src="/App.tsx"></script>
+    <script>
+    // Tool Tabs Functionality
+    document.querySelectorAll('.tool-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tool-tab').forEach(t => {
+                t.style.background = '#222';
+                t.style.color = '#ccc';
+            });
+            tab.style.background = '#3B82F6';
+            tab.style.color = '#fff';
+            const tabName = tab.dataset.tab;
+            document.querySelectorAll('.wrapper-tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.getElementById('tab-' + tabName).style.display = 'block';
+        });
+    });
+
+    function copyEmbedCode() {
+        const textarea = document.getElementById('embedCodeTab');
+        textarea.select();
+        document.execCommand('copy');
+        alert('Copied to clipboard!');
+    }
+    </script>
+<div style="text-align:center;padding:1rem;opacity:0.6;font-size:0.8rem;font-family:sans-serif;">
+    <a href="https://poliinternational.com/tools/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Powered by Poli International</a>
+</div>
+    <div class="powered-by-footer" style="text-align: center; padding: 2rem 1rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; background: rgba(0,0,0,0.2);">
+        <a href="https://poliinternational.com/tattoo-font-previewer/" target="_blank" rel="noopener" style="color: #3B82F6; text-decoration: none; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; opacity: 0.6; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+            POWERED BY POLI INTERNATIONAL
+        </a>
+    </div>
 </body>
 </html>
