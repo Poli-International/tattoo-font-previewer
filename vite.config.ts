@@ -1,33 +1,32 @@
-import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import compression from 'vite-plugin-compression';
+import path from 'path';
+import {defineConfig} from 'vite';
 
-export default defineConfig({
-  base: './',
-  plugins: [
-    react(),
-    compression({ algorithm: 'gzip' })
-  ],
-  build: {
-    rollupOptions: {
-      input: {
-        main: './index.html',
-        embed: './embed.html'
+export default defineConfig(() => {
+  return {
+    // Served from the site at /tools/tattoo-font-previewer/, not the domain root.
+    base: '/tools/tattoo-font-previewer/',
+    plugins: [react(), tailwindcss()],
+    resolve: {
+      alias: {
+        '@': path.resolve(import.meta.dirname, '.'),
       },
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom']
-        }
-      }
     },
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true
-      }
-    }
-  },
-  server: {
-    port: 3000
-  }
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
+    },
+    publicDir: false as const,
+    server: {
+      // HMR is disabled in AI Studio via DISABLE_HMR env var.
+      // Do not modify: file watching is disabled to prevent flickering during agent edits.
+      hmr: process.env.DISABLE_HMR !== 'true',
+      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
+      watch: process.env.DISABLE_HMR === 'true' ? null : {},
+    },
+  };
 });
