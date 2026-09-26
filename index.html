@@ -2,166 +2,347 @@
 <html lang="en" class="dark">
 <head>
   <meta name="robots" content="noindex, nofollow">
-    <script>
-if (window.self !== window.top) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    document.documentElement.classList.add('dark');
-    document.addEventListener('DOMContentLoaded', function () { document.body.classList.add('dark-mode'); });
-    window.addEventListener('message', function(e) {
-        if (e.data && e.data.type === 'poli-theme') {
-            if (e.data.light) {
-                document.body.classList.remove('dark-mode');
-                document.body.classList.add('light-mode');
-                document.documentElement.classList.remove('dark');
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('poli-dark-mode', 'light');
-                window.dispatchEvent(new StorageEvent('storage', { key: 'poli-dark-mode', newValue: 'light' }));
-            } else {
-                document.body.classList.remove('light-mode');
-                document.body.classList.add('dark-mode');
-                document.documentElement.classList.add('dark');
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('poli-dark-mode', 'dark');
-                window.dispatchEvent(new StorageEvent('storage', { key: 'poli-dark-mode', newValue: 'dark' }));
-            }
-        }
-    });
-}
-</script>
-    <style>
-    /* Override React inline styles when parent controls theme */
-    body.dark-mode { background-color: #0D0D0D !important; }
-    body.light-mode { background-color: #FFFFFF !important; }
-    </style>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tattoo Font Previewer | Poli International</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tattoo Font Previewer | Poli International</title>
+  <meta name="description" content="Preview text in 107 professional tattoo fonts across blackletter, script, chicano, fineline, European traditions (French, Italian, German, Dutch, Spanish, Portuguese), Japanese, Chinese, gothic, and decorative styles with arc bending, letter spacing, and high-resolution PNG export.">
+  <meta property="og:title" content="Tattoo Font Previewer | Poli International">
+  <meta property="og:description" content="Preview text in 107 professional tattoo fonts across blackletter, script, chicano, fineline, European traditions (French, Italian, German, Dutch, Spanish, Portuguese), Japanese, Chinese, gothic, and decorative styles with arc bending, letter spacing, and high-resolution PNG export.">
+  <meta property="og:type" content="website">
 
-    <script type="module" src="/App.tsx"></script>
-    <link rel="modulepreload" crossorigin href="/tools/tattoo-font-previewer/assets/vendor-DF3nNwgj.js">
-    <link rel="modulepreload" crossorigin href="/tools/tattoo-font-previewer/assets/index-BFb-GsAn.js">
-    <link rel="stylesheet" crossorigin href="/tools/tattoo-font-previewer/assets/index-CKwCImN9.css">
-    <link rel="stylesheet" href="/tools/tattoo-font-previewer/css/poli-standard.css">
-<script type='application/ld+json'>
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Tattoo Font Previewer",
-  "url": "https://poliinternational.com/tools/tattoo-font-previewer/",
-  "description": "Preview tattoo lettering and fonts before committing to ink. Test typography styles, sizes, and spacing on a simulated skin surface.",
-  "applicationCategory": "UtilityApplication",
-  "operatingSystem": "Any",
-  "browserRequirements": "Requires JavaScript. Requires HTML5.",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "author": {
-    "@type": "Organization",
-    "name": "Poli International",
-    "url": "https://poliinternational.com"
-  },
-  "creator": {
-    "@type": "Organization",
-    "name": "Poli International",
-    "url": "https://poliinternational.com"
-  },
-  "maintainer": {
-    "@type": "Organization",
-    "name": "Poli International",
-    "url": "https://poliinternational.com"
-  },
-  "dateModified": "2026-07-01",
-  "license": "https://opensource.org/licenses/MIT",
-  "isAccessibleForFree": true
-}
-</script>
+  <script>
+  if (window.self !== window.top) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.classList.add('dark');
+      document.addEventListener('DOMContentLoaded', function () { document.body.classList.add('dark-mode'); });
+      window.addEventListener('message', function(e) {
+          if (e.data && e.data.type === 'poli-theme') {
+              if (e.data.light) {
+                  document.body.classList.remove('dark-mode');
+                  document.body.classList.add('light-mode');
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.setAttribute('data-theme', 'light');
+                  try {
+                      localStorage.setItem('poli-dark-mode', 'light');
+                  } catch(err) {}
+                  window.dispatchEvent(new StorageEvent('storage', { key: 'poli-dark-mode', newValue: 'light' }));
+              } else {
+                  document.body.classList.remove('light-mode');
+                  document.body.classList.add('dark-mode');
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                  try {
+                      localStorage.setItem('poli-dark-mode', 'dark');
+                  } catch(err) {}
+                  window.dispatchEvent(new StorageEvent('storage', { key: 'poli-dark-mode', newValue: 'dark' }));
+              }
+          }
+      });
+  }
+  </script>
 
-  <script src="/js/input-guards.js"></script>
-<link rel="stylesheet" href="/tools/shared/print.css" media="print">
-  <link rel="stylesheet" href="/tools/shared/a11y.css">
-  </head>
-<body class="dark-mode">
-    <!-- Tool Tabs -->
-    <div class="tool-tabs" style="display:flex !important;background:#1a1a1a;border-bottom:2px solid #333;position:relative;z-index:999999;">
-        <button class="tool-tab active" data-tab="tool" style="flex:1;padding:1rem;background:#3B82F6;color:#fff;border:none;cursor:pointer;font-size:1rem;font-weight:600;">Ã°Å¸Â§Â® Tool</button>
-        <button class="tool-tab" data-tab="docs" style="flex:1;padding:1rem;background:#222;color:#ccc;border:none;cursor:pointer;font-size:1rem;font-weight:600;">Ã°Å¸â€œâ€“ Documentation</button>
-        <button class="tool-tab" data-tab="embed" style="flex:1;padding:1rem;background:#222;color:#ccc;border:none;cursor:pointer;font-size:1rem;font-weight:600;">Ã¢Å¡Â¡ Embed Code</button>
-    </div>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Tattoo Font Previewer",
+    "url": "https://poliinternational.com/tattoo-font-previewer/",
+    "description": "Preview text in 107 professional tattoo fonts across blackletter, script, chicano, fineline, European traditions (French, Italian, German, Dutch, Spanish, Portuguese), Japanese, Chinese, gothic, and decorative styles with real-time sizing, background controls, and PNG download.",
+    "applicationCategory": "UtilityApplication",
+    "inLanguage": ["en", "fr", "de", "es", "it", "nl", "pt"],
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Poli International",
+      "url": "https://poliinternational.com"
+    },
+    "creator": {
+      "@type": "Organization",
+      "name": "Poli International",
+      "url": "https://poliinternational.com"
+    },
+    "maintainer": {
+      "@type": "Organization",
+      "name": "Poli International",
+      "url": "https://poliinternational.com"
+    },
+    "license": "https://opensource.org/licenses/MIT",
+    "isAccessibleForFree": true
+  }
+  </script>
 
-    <!-- Tab Content: Tool -->
-    <div id="tab-tool" class="wrapper-tab-content">
-        <main class="tool-main-content">
-            <div id="root"></div>
-        </main>
-    </div>
-
-    <!-- Tab Content: Documentation -->
-    <div id="tab-docs" class="wrapper-tab-content" style="display:none;padding:2rem 1rem;">
-        <iframe src="./documentation.html" style="width:100%;min-height:800px;border:none;background:#0f0f0f;"></iframe>
-    </div>
-
-    <!-- Tab Content: Embed -->
-    <div id="tab-embed" class="wrapper-tab-content" style="display:none;padding:2rem;text-align:center;">
-        <div style="background:#1a1a1a;padding:2rem;border-radius:8px;max-width:600px;margin:0 auto;">
-            <h2 style="color:#3B82F6;margin-bottom:1rem;">Embed This Tool</h2>
-            <p style="color:#ccc;margin-bottom:1rem;">Copy the code below to embed this tool on your website:</p>
-            <textarea id="embedCodeTab" style="width:100%;height:120px;background:#0f0f0f;color:#10B981;border:1px solid #333;border-radius:4px;padding:1rem;font-family:monospace;font-size:0.9rem;" readonly>&lt;iframe src="https://poliinternational.com/tools/tattoo-font-previewer/index.html" width="100%" height="1000" frameborder="0" style="border-radius:12px;"&gt;&lt;/iframe&gt;</textarea>
-            <button onclick="copyEmbedCode()" style="margin-top:1rem;padding:0.75rem 1.5rem;background:#3B82F6;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">Ã°Å¸â€œâ€¹ Copy Code</button>
-        </div>
-    </div>
-
-    <div id="embedModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title" style="text-align: center;">Use This Tool FREE</h2>
-                <span class="modal-close" id="modalClose">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="modal-section">
-                    <h3>Ã°Å¸â€œâ€¹ Copy Embed Code</h3>
-                    <div class="code-container">
-                        <textarea id="embedCode" class="embed-code-textarea" readonly></textarea>
-                        <button id="copyEmbedCode" class="btn btn--primary btn--small">Ã°Å¸â€œâ€¹ Copy Code</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-    // Tool Tabs Functionality
-    document.querySelectorAll('.tool-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.tool-tab').forEach(t => {
-                t.style.background = '#222';
-                t.style.color = '#ccc';
-            });
-            tab.style.background = '#3B82F6';
-            tab.style.color = '#fff';
-            const tabName = tab.dataset.tab;
-            document.querySelectorAll('.wrapper-tab-content').forEach(content => {
-                content.style.display = 'none';
-            });
-            document.getElementById('tab-' + tabName).style.display = 'block';
-        });
-    });
-
-    function copyEmbedCode() {
-        const textarea = document.getElementById('embedCodeTab');
-        textarea.select();
-        document.execCommand('copy');
-        alert('Copied to clipboard!');
+  <style>
+    :root {
+      --tab-bg: #1a1a1a;
+      --tab-border: #333333;
+      --tab-active-bg: #6d28d9;
+      --tab-active-text: #ffffff;
+      --tab-inactive-bg: #222222;
+      --tab-inactive-text: #d1d5db;
+      --card-bg: #1a1a1a;
+      --code-bg: #0f0f0f;
+      --code-color: #34d399;
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --border-subtle: #2d2d2d;
     }
-    </script>
-<div style="text-align:center;padding:1rem;opacity:0.6;font-size:0.8rem;font-family:sans-serif;">
-    <a href="https://poliinternational.com/tools/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Powered by Poli International</a>
-</div>
-    <div class="powered-by-footer" style="text-align: center; padding: 2rem 1rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 2rem; background: rgba(0,0,0,0.2);">
-        <a href="https://poliinternational.com/tattoo-font-previewer/" target="_blank" rel="noopener" style="color: #3B82F6; text-decoration: none; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; opacity: 0.6; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
-            POWERED BY POLI INTERNATIONAL
-        </a>
+    [data-theme="light"],
+    body.light-mode {
+      --tab-bg: #f3f4f6;
+      --tab-border: #e5e7eb;
+      --tab-active-bg: #6d28d9;
+      --tab-active-text: #ffffff;
+      --tab-inactive-bg: #e5e7eb;
+      --tab-inactive-text: #374151;
+      --card-bg: #ffffff;
+      --code-bg: #f8fafc;
+      --code-color: #065f46;
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --border-subtle: #e5e7eb;
+    }
+    body.dark-mode { background-color: #0D0D0D; color: #FFFFFF; }
+    body.light-mode { background-color: #FFFFFF; color: #1A1A1A; }
+    
+    .tool-tabs-container {
+      display: flex;
+      background: var(--tab-bg);
+      border-bottom: 2px solid var(--tab-border);
+      position: relative;
+      z-index: 50;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tool-tab-btn {
+      flex: 1;
+      min-height: 48px;
+      padding: 0.75rem 1rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .tool-tab-btn.active {
+      background: var(--tab-active-bg);
+      color: var(--tab-active-text);
+    }
+    .tool-tab-btn:not(.active) {
+      background: var(--tab-inactive-bg);
+      color: var(--tab-inactive-text);
+    }
+    .tool-tab-btn:not(.active):hover {
+      background: #2a2a2a;
+      color: #ffffff;
+    }
+    .wrapper-tab-content {
+      width: 100%;
+    }
+    .embed-card {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      border: 1px solid var(--tab-border);
+    }
+    .embed-card h2 {
+      color: #c084fc;
+      margin-bottom: 1rem;
+    }
+    .embed-card p {
+      color: var(--tab-inactive-text);
+      margin-bottom: 1rem;
+    }
+    .embed-code-textarea {
+      width: 100%;
+      height: 120px;
+      background: var(--code-bg);
+      color: var(--code-color);
+      border: 1px solid var(--tab-border);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      resize: none;
+    }
+    .embed-copy-btn {
+      margin-top: 1rem;
+      min-height: 44px;
+      padding: 0.75rem 1.75rem;
+      background: var(--tab-active-bg);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s;
+    }
+    .embed-copy-btn:hover {
+      opacity: 0.9;
+    }
+    .docs-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .docs-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .docs-heading {
+      color: #a855f7;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .docs-text {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .docs-card-item {
+      background: var(--code-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+    .docs-card-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: #c084fc;
+      margin-bottom: 0.25rem;
+    }
+    .hidden {
+      display: none !important;
+    }
+    [hidden] {
+      display: none !important;
+    }
+    @media (max-width: 480px) {
+      .tool-tab-btn {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+      }
+      .embed-card {
+        padding: 1.25rem 0.75rem;
+        margin: 0 0.5rem;
+      }
+      .docs-container {
+        padding: 0.5rem;
+      }
+      .docs-section {
+        padding: 1rem;
+      }
+    }
+    @media print {
+      .tool-tabs-container,
+      #toolTabsBar {
+        display: none !important;
+      }
+    }
+  </style>
+  <script src="/js/input-guards.js"></script>
+  <link rel="stylesheet" href="/tools/shared/print.css" media="print">
+  <link rel="stylesheet" href="/tools/shared/a11y.css">
+</head>
+<body class="dark-mode">
+  <!-- Top Navigation Tabs -->
+  <div class="tool-tabs-container" id="toolTabsBar">
+    <button class="tool-tab-btn active" data-tab="tool" data-i18n="tab.tool">Tool</button>
+    <button class="tool-tab-btn" data-tab="docs" data-i18n="tab.docs">Documentation</button>
+    <button class="tool-tab-btn" data-tab="embed" data-i18n="tab.embed">Embed Code</button>
+  </div>
+
+  <!-- Tab Content: Tool -->
+  <div id="tab-tool" class="wrapper-tab-content">
+    <main class="tool-main-content">
+      <div id="root"></div>
+    </main>
+  </div>
+
+  <!-- Tab Content: Documentation: the published guide, in the language the tool is set to -->
+  <div id="tab-docs" class="wrapper-tab-content hidden">
+    <iframe id="docsFrame" src="/tools/tattoo-font-previewer/documentation.html" data-i18n-title="tab.docsFrameTitle"
+      title="Tattoo Font Previewer Documentation" loading="lazy"
+      style="width: 100%; min-height: 80vh; border: 0; display: block;"></iframe>
+  </div>
+
+  <!-- Tab Content: Embed -->
+  <div id="tab-embed" class="wrapper-tab-content hidden" style="padding: 2rem;">
+    <div class="embed-card">
+      <h2 data-i18n="tab.embedTitle">Embed This Tool</h2>
+      <p data-i18n="tab.embedDesc">Copy the code below to embed this tool on your website:</p>
+      <textarea id="embedCodeTab" class="embed-code-textarea" readonly>&lt;iframe src="https://poliinternational.com/tools/tattoo-font-previewer/index.html" width="100%" height="1000" frameborder="0" style="border-radius:12px;"&gt;&lt;/iframe&gt;</textarea>
+      <div>
+        <button id="tabCopyBtn" class="embed-copy-btn" onclick="copyEmbedCodeTab()" data-i18n="tab.copyBtn">Copy Code</button>
+      </div>
     </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.tool-tab-btn').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tool-tab-btn').forEach(function(t) {
+          t.classList.remove('active');
+        });
+        tab.classList.add('active');
+        var tabName = tab.dataset.tab;
+        document.querySelectorAll('.wrapper-tab-content').forEach(function(content) {
+          content.classList.add('hidden');
+        });
+        var activeContent = document.getElementById('tab-' + tabName);
+        if (activeContent) {
+          activeContent.classList.remove('hidden');
+        }
+      });
+    });
+
+    function copyEmbedCodeTab() {
+      var textarea = document.getElementById('embedCodeTab');
+      if (textarea) {
+        textarea.select();
+        navigator.clipboard.writeText(textarea.value).then(function() {
+          var btn = document.getElementById('tabCopyBtn');
+          if (btn) {
+            var oldText = btn.textContent;
+            btn.textContent = (window.t ? window.t('tab.copied') : 'Copied!');
+            setTimeout(function() {
+              btn.textContent = oldText;
+            }, 2000);
+          }
+        }).catch(function() {
+          document.execCommand('copy');
+        });
+      }
+    }
+  </script>
+
+  <script src="/tools/tattoo-font-previewer/js/vendor/opentype.min.js"></script>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
