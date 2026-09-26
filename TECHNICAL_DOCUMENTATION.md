@@ -12,372 +12,348 @@
 8. [Browser Compatibility](#browser-compatibility)
 9. [Security](#security)
 10. [Version History](#version-history)
-11. [Support and Contact](#support-and-contact)
+11. [Support / Contact](#support--contact)
+
+---
 
 ## Architecture Overview
 
 ### Technology Stack
 
-- **Runtime**: Client-side only, no server dependencies
-- **Framework**: React 18 (production build via Vite)
-- **Language**: JavaScript (ES modules)
-- **Styling**: Tailwind CSS (utility classes)
-- **Build Tool**: Vite (module bundler)
-- **Font Loading**: Google Fonts API (preconnect + dns-prefetch)
+The Tattoo Font Previewer is a static, client-side web application. There is no backend, no server-side rendering, and no database.
+
+| Layer | Technology |
+|-------|-----------|
+| Markup | HTML5 (`index.html`, `embed.html`) |
+| Styling | Inline CSS custom properties (CSS variables) with dark/light theming |
+| Application logic | React 19.3.0 (bundled, minified) |
+| Font parsing | OpenType.js (`js/vendor/opentype.min.js`) for user-uploaded fonts |
+| Font delivery | Google Fonts (loaded at runtime by the browser) |
+| Persistence | Browser `localStorage` only |
+| Export | HTML5 `<canvas>` rendering to PNG (and SVG for user-loaded fonts) |
+
+The application is dependency-free in the sense that it ships as static files. The only external runtime dependency is Google Fonts, which the browser fetches to render the 107 catalog typefaces.
 
 ### File Structure
 
+From the provided file headers:
+
 ```
-tattoo-font-previewer/
-├── index.html                    # Main entry point with tab navigation
-├── dist/
-│   └── index.html               # Distribution build (iframe-ready)
+/tools/tattoo-font-previewer/
+├── index.html                          # Main entry, tab shell, embed tab
+├── embed.html                          # Standalone embed variant (same shell)
+├── documentation.html                  # English guide (loaded in docs iframe)
+├── documentation-de.html               # German guide
+├── documentation-es.html               # Spanish guide
+├── documentation-fr.html               # French guide
+├── documentation-it.html               # Italian guide
+├── documentation-nl.html               # Dutch guide
+├── documentation-pt.html               # Portuguese guide
 ├── assets/
-│   ├── main-BgHeG9R-.js         # Main application bundle
-│   ├── main-CdN-bXBv.js         # Alternative main bundle variant
-│   ├── main-ryfWM3cm.js         # Alternative main bundle variant
-│   ├── embed-CGmfNtOL.js        # Embed mode bundle
-│   ├── embed-CtIviMj1.js        # Alternative embed bundle
-│   ├── embed-CTTgRztb.js        # Alternative embed bundle
-│   ├── embed-wUpM7niT.js        # Alternative embed bundle
-│   ├── embed-ZC4Cv35N.js        # Alternative embed bundle
-│   ├── index-BFb-GsAn.js        # Shared component library
-│   ├── index-N9TX4OH5.js        # Alternative shared library
-│   ├── index-Dwr0Y3_D.js        # Alternative shared library
-│   ├── index-AagzsUJ8.js        # Alternative shared library
-│   ├── vendor-DF3nNwgj.js       # React + ReactDOM vendor bundle
-│   └── index-CKwCImN9.css       # Compiled stylesheet
-└── css/
-    └── poli-standard.css         # Standard Poli styling overrides
+│   ├── index-DI64JvvS.js               # Bundled React application (minified)
+│   └── index-DuE1SxM6.css              # Bundled application styles
+└── js/
+    └── vendor/
+        └── opentype.min.js             # OpenType.js font parser
 ```
 
-### Component Architecture
+Shared assets referenced from the site root:
 
-The application follows a single-page component hierarchy:
+- `/js/input-guards.js` (input sanitization/guard script)
+- `/tools/shared/print.css` (print stylesheet, `media="print"`)
+- `/tools/shared/a11y.css` (accessibility stylesheet)
 
-```
-App (root component)
-├── Header (breadcrumb + dark mode toggle)
-├── ActionBar (Buy me a coffee, Documentation, Embed buttons)
-├── TextInputPanel (text input, font size, background color)
-├── CategoryFilter (font category selector)
-├── FontPreviewGrid (renders all matching fonts)
-├── RelatedToolsSection
-├── Footer
-└── EmbedModal (modal dialog for embed code)
-```
+### Component / Logic Breakdown
 
-### State Management
+**Shell layer (`index.html`)**
 
-All state is managed via React `useState` hooks within the root component. No external state management library is used.
+The page is a three-tab shell. Tab switching is handled by a plain inline script, independent of the React bundle:
+
+- `#toolTabsBar` holds three `.tool-tab-btn` buttons: `tool`, `docs`, `embed`.
+- Each tab maps to a `.wrapper-tab-content` container: `#tab-tool`, `#tab-docs`, `#tab-embed`.
+- Clicking a tab removes `.active` from all buttons, adds it to the clicked one, hides all content wrappers with `.hidden`, then reveals `#tab-<name>`.
+
+**Tool layer (`#root`)**
+
+The React application mounts into `<div id="root">` inside `<main class="tool-main-content">`. This is where the font gallery, controls, filters, comparison panel, and export logic live.
+
+**Docs layer (`#tab-docs`)**
+
+An `<iframe id="docsFrame">` loads `documentation.html` lazily (`loading="lazy"`, `min-height: 80vh`). The iframe follows the tool's selected language.
+
+**Embed layer (`#tab-embed`)**
+
+A read-only `<textarea id="embedCodeTab">` holds the iframe snippet, with a copy button (`#tabCopyBtn`).
+
+**Theme bridge**
+
+When the tool is embedded (`window.self !== window.top`), a `message` listener accepts `{ type: 'poli-theme', light: boolean }` events. It toggles `dark-mode` / `light-mode` classes on `<body>`, sets `data-theme` on `<html>`, writes `poli-dark-mode` to `localStorage`, and dispatches a `StorageEvent` so other listeners react.
+
+---
 
 ## Data Schemas
 
-### Application State
+The following structures are defined or referenced in the provided source. Field names are taken verbatim from the code and documentation.
 
-The root component (`App` in `main-BgHeG9R-.js`) maintains the following state variables:
+### Font catalog entry
 
-| Variable | Type | Default | Description |
-|----------|------|---------|-------------|
-| `isDarkMode` | boolean | `true` (from localStorage or default dark) | Controls dark/light theme |
-| `isModalOpen` | boolean | `false` | Controls embed modal visibility |
-| `text` | string | `"Tattoo Art"` | The text to preview in all fonts |
-| `fontSize` | number | `48` | Font size in pixels for preview |
-| `category` | string | `"all"` | Font category filter |
-| `backgroundColor` | string | `"white"` | Background color for preview area |
-| `isEmbedded` | boolean | `false` (detected via `window.self !== window.top`) | Whether tool is in iframe |
+Each of the 107 catalog fonts is represented as a card in the gallery. Based on the documented filters and card actions, a font entry carries:
 
-### Local Storage Schema
+| Field | Type | Example | Notes |
+|-------|------|---------|-------|
+| `name` | string | `"Old English Text MT"` | Display name; copyable via "Copy name" |
+| `style` | string | `"blackletter"` | One of: blackletter, script, chicano, fineline, gothic, decorative |
+| `tradition` | string | `"french"` | One of: french, italian, german, dutch, spanish, portuguese, japanese, chinese |
+| `source` | string | `"catalog"` | Distinguishes catalog fonts from user-loaded (`"studio"`) |
 
-| Key | Value Type | Example |
-|-----|------------|---------|
-| `poli-dark-mode` | string | `"dark"` or `"light"` |
+A single font may belong to one style and one tradition, and appears under both filters.
 
-### Font Data Structure
+### Filter counts (catalog constants)
 
-Fonts are defined in the shared component library (`index-BFb-GsAn.js`) as an array of objects:
+| Filter | Count |
+|--------|-------|
+| All fonts | 107 |
+| Blackletter / Old English | 17 |
+| Script / Cursive | 22 |
+| Chicano / Ornamented script | 8 |
+| Fineline / Minimalist | 14 |
+| Gothic / Dark | 13 |
+| Decorative | 16 |
+| Each cultural tradition (French, Italian, German, Dutch, Spanish, Portuguese, Japanese, Chinese) | 8 |
 
-```javascript
-{
-  name: "string",          // Display name of the font
-  family: "string",        // CSS font-family value
-  category: "string",      // Font category (e.g., "blackletter", "script", "gothic", "decorative")
-  googleFont: "string"     // Google Fonts API name for loading
-}
-```
+### Control state
 
-### Category Filter Options
+| Field | Type | Range / Values | Default |
+|-------|------|----------------|---------|
+| `text` | string | any | placeholder: "Enter your lettering (e.g. names, dates, quotes)..." |
+| `fontSize` | number (px) | 12 to 144 | presets: 24, 48, 72, 96 |
+| `letterSpacing` | number | slider | default |
+| `lineHeight` | number | slider | default |
+| `arc` | number | -80 to +80 | 0 (flat) |
+| `background` | enum | `white`, `black`, `transparent`, `skin` | default |
+| `thermalStencil` | boolean | on/off | off |
+| `stencilStrokeWidth` | number (pt) | 1, 2, 3 | 2 |
+| `transferInkColor` | enum | `thermal-purple`, `carbon-blue` | default |
+| `exportResolution` | enum | `standard`, `high`, `master` | default |
+| `exportBackground` | enum | `transparent`, `white`, `black`, `skin` | default |
+| `language` | enum | `en`, `de`, `es`, `fr`, `it`, `nl`, `pt` | `en` |
+| `colorMode` | enum | `dark`, `light` | `dark` |
 
-| Value | Display Label |
-|-------|---------------|
-| `"all"` | All Fonts |
-| `"blackletter"` | Blackletter |
-| `"script"` | Script |
-| `"gothic"` | Gothic |
-| `"decorative"` | Decorative |
+### Export resolutions
+
+| Key | Dimensions | Purpose |
+|-----|-----------|---------|
+| `standard` | 2400 x 800 px | Screen reference |
+| `high` | 4800 x 1600 px | Stencil preparation |
+| `master` | 7200 x 2400 px | High-precision tracing |
+
+### DPI options
+
+| DPI | Use |
+|-----|-----|
+| 203 | Standard thermal printer |
+| 300 | High resolution |
+
+### localStorage keys
+
+| Key | Value | Purpose |
+|-----|-------|---------|
+| `poli-lang` | language code | Selected UI language |
+| `poli-dark-mode` | `"dark"` / `"light"` | Color mode |
+| `tattoo-font-favorites` | array of font names | Pinned favorites (max 10) |
+
+### Japanese / Chinese sample concepts
+
+29 example concepts are provided, including `勇` (Courage), `自由` (Freedom), `平和` (Peace), `愛` (Love), `感謝` (Gratitude).
+
+---
 
 ## Calculation / Logic Algorithms
 
-### Dark Mode Persistence
+### Arc bending
 
-**Function**: `useEffect` in root component
+The `arc` control ranges from -80 to +80. Positive values bow the text upward (chest rocker), negative values bow it downward (inverted curve). Presets: `Flat` (0), `Arc up`, `Arc down`. The value is applied as a per-character vertical offset across the rendered string.
 
-**Logic**:
-1. On mount, read `poli-dark-mode` from `localStorage`
-2. If value is `null` or `"dark"`, set dark mode as default
-3. On state change, update `localStorage`, toggle `dark` class on `<html>`, and set background colors on `<html>` and `<body>`
+### DPI / physical print size
 
-### Embed Detection
+The DPI calculator converts on-screen lettering to printed dimensions:
 
-**Logic**:
-1. Compare `window.self` with `window.top`
-2. If they differ, set `isEmbedded` state to `true`
-3. When embedded, hide header action bar, related tools section, and footer
+```
+width_cm  = pixels / DPI * 2.54
+height_cm = pixels / DPI * 2.54
+```
 
-### Font Preview Rendering
+The formula is displayed in the UI. At 203 DPI (standard thermal) or 300 DPI (high resolution), the tool reports printed width and height in both centimeters and inches.
 
-**Logic**:
-1. Accept `text`, `fontSize`, `category`, and `backgroundColor` as props
-2. Filter font array based on `category` (if not `"all"`)
-3. For each matching font, render a preview card showing the input text styled with that font family
-4. Apply the selected `fontSize` and `backgroundColor` to each preview card
+### Thermal stencil outline
+
+When `thermalStencil` is enabled, the lettering is converted to hollow outlines for thermal transfer printers and carbon copiers. Stroke width options:
+
+- 1 pt: fineline and detail
+- 2 pt: standard thermal stencil
+- 3 pt: bold carbon transfer
+
+Transfer ink color options: thermal purple or carbon blue.
+
+### Export rendering
+
+PNG export draws the lettering onto an HTML5 `<canvas>` at the selected resolution (2400x800, 4800x1600, or 7200x2400) with the selected background (transparent, white, black, or simulated skin). Exported files contain only the lettering and the chosen background.
+
+For user-loaded studio fonts in `.ttf` or `.otf` format, an additional SVG export path renders the lettering as vector paths via OpenType.js, suitable for cutting plotters and vector editors. The 107 catalog fonts export as PNG only.
+
+### Font loading
+
+Catalog fonts are fetched from Google Fonts at runtime. User-uploaded fonts (`.ttf`, `.otf`, `.woff2`) are read in browser memory via OpenType.js and never uploaded.
+
+### Favorites
+
+Pinned fonts are stored in `localStorage` under `tattoo-font-favorites`, capped at 10. The A/B comparison panel shares size and spacing between both sides, so the visible difference is purely the typeface.
+
+---
 
 ## API Reference
 
-### Public Functions
+The tool exposes the following public handlers and functions in the provided source.
 
-#### `copyEmbedCode()`
+### `copyEmbedCodeTab()`
 
-**Location**: `index.html` (inline script)
+Defined in `index.html` and `embed.html`.
 
-**Parameters**: None
+- **Params:** none
+- **Behavior:** Selects `#embedCodeTab`, writes its value to the clipboard via `navigator.clipboard.writeText`. On success, sets `#tabCopyBtn` text to the localized "Copied!" string (via `window.t('tab.copied')` if available, else `'Copied!'`) for 2000 ms, then restores the original label. On failure, falls back to `document.execCommand('copy')`.
+- **Returns:** void
 
-**Behavior**: Selects the content of the embed code textarea and copies it to clipboard using `document.execCommand('copy')`. Displays an alert on success.
+### Tab click handler (inline)
 
-#### `toggleDarkMode()`
+Bound to each `.tool-tab-btn`.
 
-**Location**: `Header` component (via `setIsDarkMode` prop)
+- **Params:** none (reads `tab.dataset.tab`)
+- **Behavior:** Removes `.active` from all tab buttons, adds `.active` to the clicked button, adds `.hidden` to all `.wrapper-tab-content`, then removes `.hidden` from `#tab-<tabName>`.
+- **Returns:** void
 
-**Parameters**: None (uses closure over `isDarkMode` state)
+### Theme message listener
 
-**Behavior**: Toggles the `isDarkMode` boolean state, which triggers the dark mode persistence effect.
+Bound to `window` `message` events.
 
-### Event Handlers
+- **Params:** `e` (MessageEvent)
+- **Behavior:** If `e.data.type === 'poli-theme'`, applies light or dark mode based on `e.data.light`, persists to `localStorage['poli-dark-mode']`, and dispatches a `StorageEvent`.
+- **Returns:** void
 
-#### Tab Navigation Handlers
+### UI actions (documented, React-rendered)
 
-**Location**: `index.html` (inline script)
+| Action | Label | Behavior |
+|--------|-------|----------|
+| Clear text | `Clear text` | Empties the text input |
+| Reset | `Reset` | Restores default size/spacing |
+| Add to favorites | `Add to favorites` | Pins a font (max 10) |
+| Compare A/B | `Compare A/B` | Opens comparison panel |
+| Swap fonts | `Swap fonts` | Switches A and B sides |
+| Copy name | `Copy name` | Copies a font's name |
+| Clear favorites | `Clear favorites` | Empties the favorites list |
+| Download PNG | `Download PNG` | Opens export options and downloads |
+| Download vector SVG | `Download vector SVG` | Available only for user-loaded `.ttf`/`.otf` fonts |
+| Remove font | `Remove font` | Removes a user-loaded studio font |
 
-**Behavior**: Click handlers on `.tool-tab` buttons toggle visibility of `.wrapper-tab-content` divs and update active tab styling.
-
-#### Embed Modal Handlers
-
-**Location**: Main application bundle
-
-**Behavior**: `isModalOpen` state controls visibility of the embed modal component. Open/close triggered by button clicks.
-
-### Props Interface
-
-#### `Header` Component
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `isDarkMode` | boolean | Current dark mode state |
-| `setIsDarkMode` | function | State setter for dark mode |
-| `isEmbedded` | boolean | Whether running in iframe |
-
-#### `TextInputPanel` Component
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `text` | string | Current preview text |
-| `setText` | function | Text state setter |
-| `fontSize` | number | Font size in pixels |
-| `setFontSize` | function | Font size state setter |
-| `backgroundColor` | string | Background color value |
-| `setBackgroundColor` | function | Background color state setter |
-
-#### `CategoryFilter` Component
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `category` | string | Current category filter |
-| `setCategory` | function | Category state setter |
-
-#### `FontPreviewGrid` Component
-
-| Prop | Type | Description |
-|------|------|-------------|
-| `text` | string | Text to render |
-| `fontSize` | number | Font size in pixels |
-| `category` | string | Category filter |
-| `backgroundColor` | string | Background color |
+---
 
 ## Integration Guide
 
-### Standalone Embedding via iframe
+### Standalone embedding via iframe
 
-The tool is designed for easy embedding on any website. Use the following iframe code:
+The tool is designed to be embedded. The embed tab provides a ready snippet:
 
 ```html
-<iframe 
-  src="https://poliinternational.com/tools/tattoo-font-previewer/index.html" 
-  width="100%" 
-  height="1000" 
-  frameborder="0" 
-  style="border-radius:12px;">
-</iframe>
+<iframe src="https://poliinternational.com/tools/tattoo-font-previewer/index.html"
+        width="100%" height="1000" frameborder="0"
+        style="border-radius:12px;"></iframe>
 ```
 
-### Embed Behavior
+### Live URL
 
-When loaded in an iframe (`window.self !== window.top`), the tool automatically:
-- Hides the header action bar (Buy me a coffee, Documentation, Embed buttons)
-- Hides the Related Tools section
-- Hides the Footer
-- Forces full-width layout on all internal containers
-- Applies dark theme by default
-- Listens for `postMessage` events with type `poli-theme` for parent-controlled theme switching
-
-### Theme Control from Parent Page
-
-Send a `postMessage` to the iframe to control dark/light mode:
-
-```javascript
-// Set light mode
-iframe.contentWindow.postMessage({ type: 'poli-theme', light: true }, '*');
-
-// Set dark mode
-iframe.contentWindow.postMessage({ type: 'poli-theme', light: false }, '*');
-```
-
-### Direct URL Access
-
-The tool is fully functional at:
 ```
 https://poliinternational.com/tools/tattoo-font-previewer/
 ```
 
-No API keys, server-side processing, or external dependencies are required for basic functionality.
+### Theme synchronization
+
+When embedded, the parent page can push theme changes by posting a message to the iframe:
+
+```js
+iframe.contentWindow.postMessage({ type: 'poli-theme', light: true }, '*');
+```
+
+The tool applies the theme, persists it to `localStorage`, and dispatches a `StorageEvent` so any sibling listeners update.
+
+### Dependency-free static hosting
+
+The tool is a static HTML/CSS/JS bundle. It can be served from any static host. The only runtime network dependency is Google Fonts for the 107 catalog typefaces. OpenType.js is vendored locally at `js/vendor/opentype.min.js`.
+
+---
 
 ## Customization
 
-### Font Size
+- **Theming:** Colors are driven by CSS custom properties (`--tab-bg`, `--tab-active-bg`, `--card-bg`, `--code-bg`, `--text-primary`, `--text-secondary`, `--border-subtle`, and others) defined in `:root` and overridden under `[data-theme=light]` / `body.light-mode`. Override these variables to rebrand.
+- **Language:** Seven languages are supported (`en`, `fr`, `de`, `es`, `it`, `nl`, `pt`). The docs iframe follows the selected language.
+- **Custom fonts:** Studio owners can load proprietary `.ttf`, `.otf`, or `.woff2` fonts at runtime. These are labeled "Studio Custom" and support all controls plus SVG export.
 
-Users can adjust font size via the `fontSize` input (default: 48px). The value is passed directly as a CSS `font-size` property to each preview card.
-
-### Background Color
-
-Users can set a background color via the `backgroundColor` input (default: `"white"`). This value is applied as the background of each preview card.
-
-### Text Input
-
-Users can type any text into the `text` input field (default: `"Tattoo Art"`). The text is rendered in all available fonts.
-
-### Dark/Light Mode
-
-Toggle via the sun/moon icon button in the header. Preference is persisted in `localStorage`.
+---
 
 ## Performance
 
-### Bundle Size
+- **Lazy docs loading:** The documentation iframe uses `loading="lazy"` and `min-height: 80vh`.
+- **Module preload:** The bundle includes a modulepreload polyfill that scans `link[rel="modulepreload"]` and observes DOM mutations for added preload links.
+- **Canvas export:** Exports are rendered locally on an HTML5 canvas; no server round-trip.
+- **Font caching:** Catalog fonts are cached by the browser after the first Google Fonts fetch.
 
-The application uses three main JavaScript bundles:
-- **Vendor bundle** (`vendor-DF3nNwgj.js`): Contains React 18 and ReactDOM (production minified)
-- **Shared library** (`index-BFb-GsAn.js`): Contains shared components and font data
-- **Main bundle** (`main-BgHeG9R-.js`): Contains the root application component
-
-### Font Loading
-
-- Google Fonts are loaded with `preconnect` and `dns-prefetch` hints for faster initial load
-- Fonts are loaded on demand via Google Fonts API when the application renders
-- No font subsetting or optimization is applied
-
-### Rendering
-
-- All fonts render simultaneously on page load
-- No lazy loading or virtualization is implemented for the font grid
-- For 50+ fonts, all preview cards render in a single pass
+---
 
 ## Browser Compatibility
 
-### Supported Browsers
+- **JavaScript required.** The application is a React bundle.
+- **HTML5 required** for canvas export.
+- **Clipboard API:** `navigator.clipboard.writeText` is used for the embed copy button, with a fallback to `document.execCommand('copy')` for older browsers.
+- **Operating system:** Any (per the JSON-LD `operatingSystem: "Any"`).
+- **Responsive:** A media query at `width <= 480px` reduces tab padding and font sizes; the tab bar scrolls horizontally on narrow screens.
 
-The application uses standard web technologies and should work in:
-- Chrome 60+
-- Firefox 60+
-- Safari 12+
-- Edge 79+
-- Opera 47+
-
-### Mobile Support
-
-- Fully responsive layout via Tailwind CSS utility classes
-- Touch-friendly interface with adequate tap targets
-- Viewport meta tag configured for mobile: `width=device-width, initial-scale=1.0, maximum-scale=5.0`
-
-### Known Limitations
-
-- Internet Explorer is not supported (ES module syntax, modern APIs)
-- Font rendering depends on Google Fonts availability
-- Some decorative fonts may not render correctly on all browsers
+---
 
 ## Security
 
-### Input Handling
+- **Input handling:** The page loads `/js/input-guards.js`, a shared guard script, before the application bundle.
+- **No server transmission:** User text, favorites, and exported images are processed entirely in the browser and never sent to Poli International or third parties.
+- **User font files:** Uploaded `.ttf`/`.otf`/`.woff2` files are read in browser memory and never uploaded.
+- **Third-party requests:** Google Fonts receives requests for font files only, not the user's text.
+- **Embed isolation:** The tool runs inside an iframe when embedded; theme messages are validated by `e.data.type === 'poli-theme'`.
+- **localStorage:** Only `poli-lang`, `poli-dark-mode`, and `tattoo-font-favorites` are persisted. Users can clear them via browser site-data settings or the "Clear favorites" button.
 
-- User text input is rendered directly into the DOM via React's JSX, which automatically escapes HTML entities
-- No `dangerouslySetInnerHTML` is used in the application code
-- The text input is treated as plain text, not HTML
-
-### XSS Prevention
-
-- React's built-in XSS protection handles all user input
-- No raw HTML injection points exist in the application
-- The embed code textarea is read-only and populated server-side
-
-### iframe Security
-
-- The distribution build (`dist/index.html`) sets `noindex, nofollow` meta tags
-- The tool does not access or transmit user data to any server
-- No cookies are set by the application (only `localStorage` for theme preference)
-- The tool operates entirely client-side with no network requests after initial load
-
-### Content Security
-
-- No external scripts are loaded beyond Google Fonts
-- All JavaScript is bundled and served from the same origin
-- No user data is collected, stored, or transmitted
+---
 
 ## Version History
 
-### Version 1.0.0 (Current)
+### 1.0.0
 
-- Initial release of Tattoo Font Previewer
-- 50+ professional tattoo fonts including blackletter, script, gothic, and decorative styles
-- Real-time text preview with adjustable font size
-- Category filtering for font discovery
-- Dark/light mode with persistence
-- Embeddable via iframe with parent-controlled theming
-- Responsive design for all devices
-- Free to use with no attribution required
+- Initial release of the Tattoo Font Previewer.
+- 107 open-source tattoo fonts across six style filters and eight cultural traditions.
+- Real-time controls: font size (12 to 144 px), letter spacing, line height, arc bending (-80 to +80).
+- Background options: white, black, transparent, simulated skin.
+- Thermal stencil outline mode with 1/2/3 pt stroke widths and thermal purple / carbon blue ink colors.
+- DPI calculator (203 DPI and 300 DPI) with printed width/height in cm and inches.
+- A/B font comparison with shared size and spacing.
+- Favorites system (max 10) persisted to `localStorage`.
+- PNG export at 2400x800, 4800x1600, and 7200x2400 px.
+- SVG vector export for user-loaded `.ttf`/`.otf` fonts.
+- Seven UI languages: English, French, German, Spanish, Italian, Dutch, Portuguese.
+- Dark and light color modes with iframe theme synchronization.
+- Embeddable via iframe with copy-to-clipboard snippet.
 
-## Support and Contact
+---
 
-For technical support, feature requests, or bug reports:
+## Support / Contact
 
-- **Email**: support@poliinternational.com
-- **Website**: https://poliinternational.com
-- **Documentation**: https://poliinternational.com/tattoo-font-previewer-documentation/
-- **Company**: Poli International Co., Ltd.
-- **Location**: Thailand
+For questions, bug reports, or feature requests:
 
-### Community Support
+**Email:** support@poliinternational.com
 
-- **Ko-fi**: https://ko-fi.com/C0C81NEXBV (support development)
+**Publisher:** Poli International (https://poliinternational.com)
 
-### Related Tools
-
-- Tattoo Pricing Calculator: https://poliinternational.com/tattoo-price-estimator/
-- Tattoo Stencil Calculator: https://poliinternational.com/tools/stencil-calculator/
-- Tattoo Ink Color Mixer: https://poliinternational.com/tools/ink-mixer/
+**License:** MIT (per the JSON-LD `license` field)
